@@ -9,11 +9,30 @@ class Interfaz {
 
     //Método par acuando inicialize la app
     init(){
-
+        //Llamar a imprimir categorias de la Rest API
+        this.imprimirCategorias();
     }
 
     //Imprimir categorías
     imprimirCategorias() {
-        const listaCategorias = eventbrite.obtenerCategorias();
+        const listaCategorias = eventbrite.obtenerCategorias()
+            .then(categorias => {
+                //console.log(categorias);
+                const cats = categorias.categorias.categories;
+
+                //Seleccionar el Select de categorias
+                const selectCategoria = document.getElementById('listado-categorias');
+
+                //Recorremos el array e imprimimos los <option>
+                cats.forEach(cat => {
+                    const option = document.createElement('option');
+                    //Igualamos el option con el 'id' porque en la documentación vemos las categorias deben 
+                    //ser relacionadas con el 'id'.
+                    //https://www.eventbrite.com.mx/platform/api#/reference/categories/retrieve/category-by-id
+                    option.value = cat.id;
+                    option.appendChild(document.createTextNode(cat.name_localized));
+                    selectCategoria.appendChild(option);
+                })
+            })
     }
 }
